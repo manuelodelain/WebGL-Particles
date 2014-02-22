@@ -15,7 +15,7 @@ function loadScene() {
 
     gl.enable(gl.VERTEX_PROGRAM_POINT_SIZE);
     //gl.enable(gl.POINT_SMOOTH);
-    
+
     //    Check whether the WebGL context is available or not
     //    if it's not available exit
     if (!gl) {
@@ -121,16 +121,23 @@ function loadScene() {
     //    Bind the buffer object to the ARRAY_BUFFER target.
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     //    Specify the vertex positions (x, y, z)
-    var numParticles = 100;
+    var numParticles = 1000;
     var xPos = 0;
     var yPos = 0;
+    var cameraZ = 10;
     var zPos = 10;
-    var radius = 10;
+    var radius = 4;
     var particlesVertices = [];
+    var theta;
+    var phi;
 
     for (var i = 0; i < numParticles; i++){
-    	xPos = Math.random() * 6 - 3;
-    	yPos = Math.random() * 6 - 3;
+        theta = Math.random() * Math.PI * 2;
+        phi = Math.random() * Math.PI;
+
+    	xPos = radius * Math.cos(theta) * Math.sin(phi);
+    	yPos = radius * Math.sin(theta) * Math.sin(phi);
+        zPos = (radius * Math.cos(phi)) + cameraZ;
 
     	particlesVertices.push(
 			xPos, yPos, zPos
