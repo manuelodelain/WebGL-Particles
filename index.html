@@ -23,8 +23,10 @@
 
 	        uniform mat4 modelViewMatrix;
 	        uniform mat4 perspectiveMatrix;
+            uniform float pointSize;
 
 	        void main(void) {
+                gl_PointSize = 4.0;
 	        	gl_Position = perspectiveMatrix * modelViewMatrix * vec4(vertexPosition, 1.0);
         	}
         </script>

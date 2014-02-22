@@ -12,6 +12,10 @@ function loadScene() {
     var canvas = document.getElementById("webGLCanvas");
     //    Get the WebGL context
     var gl = canvas.getContext("experimental-webgl");
+
+    gl.enable(gl.VERTEX_PROGRAM_POINT_SIZE);
+    //gl.enable(gl.POINT_SMOOTH);
+    
     //    Check whether the WebGL context is available or not
     //    if it's not available exit
     if (!gl) {
@@ -117,10 +121,24 @@ function loadScene() {
     //    Bind the buffer object to the ARRAY_BUFFER target.
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
     //    Specify the vertex positions (x, y, z)
-    var vertices = new Float32Array([-0.5, 0.5, 4.0, -0.5, -0.5, 4.0,
-        0.5, 0.5, 4.0,
-        0.5, -0.5, 4.0
-    ]);
+    var numParticles = 100;
+    var xPos = 0;
+    var yPos = 0;
+    var zPos = 10;
+    var radius = 10;
+    var particlesVertices = [];
+
+    for (var i = 0; i < numParticles; i++){
+    	xPos = Math.random() * 6 - 3;
+    	yPos = Math.random() * 6 - 3;
+
+    	particlesVertices.push(
+			xPos, yPos, zPos
+		);
+    }
+
+    var vertices = new Float32Array(particlesVertices);
+
     //    Creates a new data store for the vertices array which is bound to the ARRAY_BUFFER.
     //    The third paramater indicates the usage pattern of the data store. Possible values are
     //    (from the OpenGL documentation):
@@ -141,7 +159,7 @@ function loadScene() {
     //    Define the viewing frustum parameters
     //    More info: http://en.wikipedia.org/wiki/Viewing_frustum
     //    More info: http://knol.google.com/k/view-frustum
-    var fieldOfView = 300.0;
+    var fieldOfView = 30.0;
     var aspectRatio = canvas.width / canvas.height;
     var nearPlane = 1.0;
     var farPlane = 10000.0;
@@ -190,7 +208,7 @@ function loadScene() {
     //     drawing mode to use. This can be GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP, 
     //     GL_LINES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_TRIANGLES, GL_QUAD_STRIP, 
     //     GL_QUADS, and GL_POLYGON
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, vertices.length / 3.0);
+    gl.drawArrays(gl.POINTS, 0, vertices.length / 3);
     gl.flush();
 }
 window.onload = loadScene;
