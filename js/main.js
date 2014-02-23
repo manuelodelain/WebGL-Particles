@@ -125,11 +125,18 @@ function loadScene() {
     var xPos = 0;
     var yPos = 0;
     var cameraZ = 10;
-    var zPos = 10;
+    var zPos = 0;
     var radius = 4;
     var particlesVertices = [];
     var theta;
     var phi;
+    var pointsSizes = [];
+    var maxPointSize = 4;
+    var minPointSize = 0.1;
+    var minZ = -radius + cameraZ;
+    var maxZ = radius + cameraZ;
+    var normValue;
+    var ptSize;
 
     for (var i = 0; i < numParticles; i++){
         theta = Math.random() * Math.PI * 2;
@@ -139,9 +146,16 @@ function loadScene() {
     	yPos = radius * Math.sin(theta) * Math.sin(phi);
         zPos = (radius * Math.cos(phi)) + cameraZ;
 
+        normValue = (zPos - minZ) / (maxZ - minZ);
+        ptSize = (minPointSize + (maxPointSize - minPointSize)) * normValue;
+
     	particlesVertices.push(
 			xPos, yPos, zPos
-		);
+        );
+
+        pointsSizes.push(
+            ptSize
+        );
     }
 
     var vertices = new Float32Array(particlesVertices);
@@ -211,6 +225,11 @@ function loadScene() {
     //     Set the values
     gl.uniformMatrix4fv(uModelViewMatrix, false, new Float32Array(perspectiveMatrix));
     gl.uniformMatrix4fv(uPerspectiveMatrix, false, new Float32Array(modelViewMatrix));
+
+    var pointSizeAttribLocation = gl.getAttribLocation(gl.program, "pointSize");
+    console.log('pointSizeAttribLocation = ', pointSizeAttribLocation);
+
+
     //     Draw the triangles in the vertex buffer. The first parameter specifies what
     //     drawing mode to use. This can be GL_POINTS, GL_LINE_STRIP, GL_LINE_LOOP, 
     //     GL_LINES, GL_TRIANGLE_STRIP, GL_TRIANGLE_FAN, GL_TRIANGLES, GL_QUAD_STRIP, 
